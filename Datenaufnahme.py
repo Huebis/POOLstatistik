@@ -14,10 +14,23 @@ def Input():
     df = pd.DataFrame(px_data['DATA'])
 
     # Display the first few rows of the DataFrame
-    print(df.head(800))
+    #print(df.head(800))
     return df
 
+def InputEinwohnerzahlen():
 
+    # Path to your .px file
+    px_file_path = "px-x-0102020000_201.px"
+
+    # Parse the .px file
+    px_data = pyaxis.parse(px_file_path, encoding='ISO-8859-2')
+
+    # Access the data as a pandas DataFrame
+    df = pd.DataFrame(px_data['DATA'])
+
+    # Display the first few rows of the DataFrame
+    #print(df.head(800))
+    return df
 
 
 
