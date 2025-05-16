@@ -1,60 +1,46 @@
 import Datenaufnahme
+import Datenmanipulation
 import pandas as pd
+import numpy as np
 
+data = pd.read_excel('output.xlsx', dtype={'Orte': str, 'Jahr': int, 'Partei': str, 'Parteistärke': str, 'DATA': float, 'Einwohner': int})
 
-# Alle Zeilen anzeigen
-pd.set_option('display.max_rows', 100)
+data = data.drop(data.columns[3], axis=1)
 
-# Alle Spalten anzeigen
-pd.set_option('display.max_columns', None)
-
-
-
-data = Datenaufnahme.Input()
-gemeindeeinwohner = Datenaufnahme.InputEinwohnerzahlen()
-
-
-data = data[data['Ergebnisse'] != "Parteistimmen"]
 
 print(data.columns)
-print(gemeindeeinwohner.columns)
-
-gemeindeeinwohner = gemeindeeinwohner[gemeindeeinwohner['Demografische Komponente'] == "Bestand am 1. Januar"]
-gemeindeeinwohner = gemeindeeinwohner[gemeindeeinwohner['Geschlecht'] == 'Geschlecht - Total']
-gemeindeeinwohner = gemeindeeinwohner[gemeindeeinwohner['StaatsangehĂśrigkeit (Kategorie)'] == 'StaatsangehĂśrigkeit (Kategorie) - Total']
-
-gemeindeeinwohner = gemeindeeinwohner.drop(gemeindeeinwohner.columns[2], axis=1)
-gemeindeeinwohner = gemeindeeinwohner.drop(gemeindeeinwohner.columns[2], axis=1)
-gemeindeeinwohner = gemeindeeinwohner.drop(gemeindeeinwohner.columns[2], axis=1)
+print(data.head())
 
 
-gemeindeeinwohner = gemeindeeinwohner.rename(columns={'DATA': 'Einwohner'})
-gemeindeeinwohner = gemeindeeinwohner.rename(columns={'Kanton (-) / Bezirk (>>) / Gemeinde (......)': 'Orte'})
+dfSVP = data[data['Partei'] == "SVP"]
+dfSP = data[data['Partei'] == "SP"]
+dfGrune = data[data['Partei'] == "Grüne"]
 
-data = data.rename(columns={'Bezirk (>>) / Gemeinde (......)': 'Orte'})
-
-#print(gemeindeeinwohner)
-#print(data)
-#print(data.columns)
-
-
-print(gemeindeeinwohner)
-gemeindeeinwohner['Orte'] = gemeindeeinwohner['Orte'].str.replace(r'\d+', '', regex=True)
-gemeindeeinwohner['Orte'] = gemeindeeinwohner['Orte'].str.replace(r'\.\.\.\.\.\. ', '', regex=True)
-data['Orte'] = data['Orte'].str.replace(r'\.\.\.\.\.\.', '', regex=True)
-#print(gemeindeeinwohner)
-print(data)
-
-merged_df = pd.merge(data, gemeindeeinwohner, on=['Orte', 'Jahr'], how='inner')
+dfSVP = dfSVP[dfSVP["Jahr"] == 2023]
+correlationSVP = dfSVP["DATA"].corr(dfSVP["Einwohner"])
+print("Correlation der SVP:")
+print(correlationSVP)
 
 
-merged_df = merged_df.replace("\"...\"", 0)
-merged_df = merged_df.replace("", 0)
+correlationSP = dfSP["DATA"].corr(dfSP["Einwohner"])
+print("Correlation der SP:")
+print(correlationSP)
+#print(dfSVP.head())
+
+correlationGrune = dfGrune["DATA"].corr(dfGrune["Einwohner"])
+print("Correlation der Grünen:")
+print(correlationGrune)
+print(dfGrune.head())
 
 
-merged_df = merged_df[~merged_df['Orte'].str.startswith('>>')]
-#print(merged_df)
+Datenmanipulation.Plotter(dfSVP, "SVP")
 
 
-file_path = 'output.xlsx'
-merged_df.to_excel(file_path, index=False)
+
+print("Korrelation der SVP in einer Exponentialkorrelation")
+#dfSVP["logDATA"] = np.log(dfSVP["DATA"]+ 1e-10)
+dfSVP["logEinwohner"] = np.log(dfSVP["Einwohner"] + 1e-10)
+
+correlationSVP = dfSVP["DATA"].corr(dfSVP["logEinwohner"])
+print("Correlation der SVP aber Exponential:")
+print(correlationSVP)
