@@ -7,6 +7,9 @@ data = pd.read_excel('output.xlsx', dtype={'Orte': str, 'Jahr': int, 'Partei': s
 
 data = data.drop(data.columns[3], axis=1)
 
+data = data[data["Einwohner"] != 0]
+
+
 
 print(data.columns)
 print(data.head())
@@ -33,7 +36,7 @@ print(correlationGrune)
 print(dfGrune.head())
 
 
-Datenmanipulation.Plotter(dfSVP, "SVP")
+#Datenmanipulation.Plotter(dfSVP, "SVP")
 
 
 
@@ -44,3 +47,6 @@ dfSVP["logEinwohner"] = np.log(dfSVP["Einwohner"] + 1e-10)
 correlationSVP = dfSVP["DATA"].corr(dfSVP["logEinwohner"])
 print("Correlation der SVP aber Exponential:")
 print(correlationSVP)
+
+
+Datenmanipulation.Plotter(dfSVP, "SVP")

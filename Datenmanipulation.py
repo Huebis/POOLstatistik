@@ -65,7 +65,7 @@ def main():
 def Plotter(df,Partei):
 
     plt.figure(figsize=(8, 6))  # Festlegen der Größe des Diagramms
-    plt.scatter(df["Einwohner"], df["DATA"], color='blue', alpha=0.7, label='Datenpunkte')
+    plt.scatter(df["logEinwohner"], df["DATA"], color='blue', alpha=0.7, label='Datenpunkte')
 
     # Achsentitel und Titel setzen
     plt.title(Partei + "in Relation zu den Einwohnerzahlen", fontsize=14)
