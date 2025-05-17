@@ -68,7 +68,7 @@ def Plotter(df,Partei):
     plt.scatter(df["logEinwohner"], df["DATA"], color='blue', alpha=0.7, label='Datenpunkte')
 
     # Achsentitel und Titel setzen
-    plt.title(Partei + "in Relation zu den Einwohnerzahlen", fontsize=14)
+    plt.title(Partei + " in Relation zu den Einwohnerzahlen", fontsize=14)
     plt.xlabel('Einwohnerzahlen', fontsize=12)
     plt.ylabel('Relative Parteistimmen', fontsize=12)
 
